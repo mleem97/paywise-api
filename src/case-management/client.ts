@@ -153,9 +153,9 @@ export class CaseManagementClient {
   /**
    * Upload an attachment to a case
    * @param caseId - The case ID
-   * @param file - File data or form data
+   * @param file - File data (File, Blob, or FormData)
    */
-  async uploadCaseAttachment(caseId: string, file: any): Promise<CaseAttachment> {
+  async uploadCaseAttachment(caseId: string, file: File | Blob | FormData): Promise<CaseAttachment> {
     const response = await this.httpClient.post<CaseAttachment>(
       `/cases/${caseId}/attachments`,
       file,
