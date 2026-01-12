@@ -1,0 +1,36 @@
+{
+  "name": "paywise-api",
+  "version": "1.0.0",
+  "description": "TypeScript/JavaScript client library for Paywise API (Case Management & Partner APIs)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "paywise",
+    "api",
+    "client",
+    "typescript",
+    "case-management",
+    "partner-api",
+    "payment"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mleem97/paywise-api.git"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.6",
+    "typescript": "^5.9.3"
+  }
+}
