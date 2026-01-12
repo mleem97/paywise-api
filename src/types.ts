@@ -35,7 +35,7 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 /**
  * API Response wrapper
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   status: number;
   statusText: string;
@@ -49,7 +49,7 @@ export interface ApiError {
   message: string;
   status?: number;
   code?: string;
-  details?: any;
+  details?: unknown;
 }
 
 /**
@@ -73,5 +73,5 @@ export interface SortParams {
  * Common query parameters
  */
 export interface QueryParams extends PaginationParams, SortParams {
-  [key: string]: any;
+  [key: string]: string | number | boolean | undefined;
 }
