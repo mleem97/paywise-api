@@ -1,5 +1,30 @@
 # 1.0.0 (2026-01-12)
 
+
+### Bug Fixes
+
+* update ApiResponse and ApiError types for better type safety ([d22db97](https://github.com/mleem97/paywise-api/commit/d22db9768cf444d470e7997aa912b142c4983395))
+* upgrade to Node.js 22 for semantic-release compatibility ([105fa80](https://github.com/mleem97/paywise-api/commit/105fa801dfb69c9c594ef83b7c99dab5c982ef41))
+
+
+### Features
+
+* add flexible parameter types for listing claims, debtors, mandates, requests, payments, statements, companies, and users ([c6a8b50](https://github.com/mleem97/paywise-api/commit/c6a8b5041ea93d9528bd4d444936b6ba60f364fe))
+* v1.1.0 - API corrections and CI/CD pipeline ([4004bc4](https://github.com/mleem97/paywise-api/commit/4004bc4bb2837429d4ea920261741fb747235fb5))
+
+
+### BREAKING CHANGES
+
+* Field names now use snake_case to match API
+
+- fix: all endpoint URLs corrected to match Paywise documentation
+- feat: add automated CI/CD with semantic-release
+- feat: add NPM Trusted Publishers (OIDC) support
+- docs: add Web Automation & Billing Integration section
+- chore: update to TypeScript moduleResolution NodeNext
+
+# 1.0.0 (2026-01-12)
+
 ### Bug Fixes
 
 * upgrade to Node.js 22 for semantic-release compatibility ([105fa80](https://github.com/mleem97/paywise-api/commit/105fa801dfb69c9c594ef83b7c99dab5c982ef41))
