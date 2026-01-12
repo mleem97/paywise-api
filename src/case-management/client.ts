@@ -15,9 +15,9 @@ import {
   MandateListResponse,
   ListMandatesParams,
   StatusUpdate,
-  StatusUpdateListResponse,
   RequestToClient,
   RequestToClientListResponse,
+  ListRequestsToClientParams,
   SubmitRequestAnswerParams,
   Payment,
   PaymentListResponse,
@@ -26,9 +26,9 @@ import {
   Statement,
   StatementListResponse,
   ListStatementsParams,
-  MandateDetail,
   MandateDetailsListResponse,
   UserInfo,
+  ClaimDocument,
 } from './types';
 
 /**
@@ -82,10 +82,15 @@ export class CaseManagementClient {
 
   /**
    * Release a claim for processing
+   * Sets the claim's submission_state to 'released'
    * @param claimId - The claim ID
+   * @param sendOrderConfirmation - Whether to receive an order entry email
    */
-  async releaseClaim(claimId: string): Promise<Claim> {
-    const response = await this.httpClient.post<Claim>(`/claims/${claimId}/release`);
+  async releaseClaim(claimId: string, sendOrderConfirmation: boolean = false): Promise<Claim> {
+    const response = await this.httpClient.patch<Claim>(`/claims/${claimId}/`, {
+      submission_state: 'released',
+      send_order_confirmation: sendOrderConfirmation,
+    });
     return response.data;
   }
 
@@ -94,9 +99,9 @@ export class CaseManagementClient {
    * @param claimId - The claim ID
    * @param file - File data (File, Blob, or FormData)
    */
-  async uploadClaimDocument(claimId: string, file: File | Blob | FormData): Promise<any> {
-    const response = await this.httpClient.post<any>(
-      `/claims/${claimId}/documents`,
+  async uploadClaimDocument(claimId: string, file: File | Blob | FormData): Promise<ClaimDocument> {
+    const response = await this.httpClient.post<ClaimDocument>(
+      `/claims/${claimId}/documents/`,
       file,
       { 'Content-Type': 'multipart/form-data' }
     );
@@ -137,8 +142,8 @@ export class CaseManagementClient {
    * @param debtorId - The debtor ID
    * @param address - Address data
    */
-  async addDebtorAddress(debtorId: string, address: Address): Promise<Address> {
-    const response = await this.httpClient.post<Address>(`/debtors/${debtorId}/addresses`, address);
+  async addDebtorAddress(debtorId: string, address: Address): Promise<Debtor> {
+    const response = await this.httpClient.post<Debtor>(`/debtors/${debtorId}/addresses/`, address);
     return response.data;
   }
 
@@ -147,8 +152,8 @@ export class CaseManagementClient {
    * @param debtorId - The debtor ID
    * @param bankAccount - Bank account data
    */
-  async addDebtorBankAccount(debtorId: string, bankAccount: BankAccount): Promise<BankAccount> {
-    const response = await this.httpClient.post<BankAccount>(`/debtors/${debtorId}/bank-accounts`, bankAccount);
+  async addDebtorBankAccount(debtorId: string, bankAccount: BankAccount): Promise<Debtor> {
+    const response = await this.httpClient.post<Debtor>(`/debtors/${debtorId}/bankaccounts/`, bankAccount);
     return response.data;
   }
 
@@ -157,9 +162,9 @@ export class CaseManagementClient {
    * @param debtorId - The debtor ID
    * @param channel - Communication channel data
    */
-  async addDebtorCommunicationChannel(debtorId: string, channel: CommunicationChannel): Promise<CommunicationChannel> {
-    const response = await this.httpClient.post<CommunicationChannel>(
-      `/debtors/${debtorId}/communication-channels`,
+  async addDebtorCommunicationChannel(debtorId: string, channel: CommunicationChannel): Promise<Debtor> {
+    const response = await this.httpClient.post<Debtor>(
+      `/debtors/${debtorId}/communicationchannels/`,
       channel
     );
     return response.data;
@@ -186,23 +191,22 @@ export class CaseManagementClient {
   }
 
   /**
-   * Archive a mandate
+   * Archive or unarchive a mandate
    * @param mandateId - The mandate ID
+   * @param archived - Whether to archive (true) or unarchive (false)
    */
-  async archiveMandate(mandateId: string): Promise<Mandate> {
-    const response = await this.httpClient.post<Mandate>(`/mandates/${mandateId}/archive`);
+  async archiveMandate(mandateId: string, archived: boolean = true): Promise<Mandate> {
+    const response = await this.httpClient.patch<Mandate>(`/mandates/${mandateId}/`, { archived });
     return response.data;
   }
 
   /**
    * List status updates for a mandate
    * @param mandateId - The mandate ID
-   * @param params - Pagination parameters
    */
-  async listMandateStatusUpdates(mandateId: string, params?: { limit?: number; offset?: number }): Promise<StatusUpdateListResponse> {
-    const response = await this.httpClient.get<StatusUpdateListResponse>(
-      `/mandates/${mandateId}/status-updates`,
-      params
+  async listMandateStatusUpdates(mandateId: string): Promise<StatusUpdate[]> {
+    const response = await this.httpClient.get<StatusUpdate[]>(
+      `/mandates/${mandateId}/statusupdates/`
     );
     return response.data;
   }
@@ -210,11 +214,11 @@ export class CaseManagementClient {
   /**
    * List requests to client for a mandate
    * @param mandateId - The mandate ID
-   * @param params - Pagination parameters
+   * @param params - Pagination and filter parameters
    */
-  async listMandateRequests(mandateId: string, params?: { limit?: number; offset?: number }): Promise<RequestToClientListResponse> {
+  async listMandateRequests(mandateId: string, params?: ListRequestsToClientParams): Promise<RequestToClientListResponse> {
     const response = await this.httpClient.get<RequestToClientListResponse>(
-      `/mandates/${mandateId}/requests`,
+      `/mandates/${mandateId}/requests-to-client/`,
       params
     );
     return response.data;
@@ -227,7 +231,7 @@ export class CaseManagementClient {
    */
   async getMandateRequest(mandateId: string, requestId: string): Promise<RequestToClient> {
     const response = await this.httpClient.get<RequestToClient>(
-      `/mandates/${mandateId}/requests/${requestId}`
+      `/mandates/${mandateId}/requests-to-client/${requestId}/`
     );
     return response.data;
   }
@@ -244,7 +248,7 @@ export class CaseManagementClient {
     params: SubmitRequestAnswerParams
   ): Promise<RequestToClient> {
     const response = await this.httpClient.post<RequestToClient>(
-      `/mandates/${mandateId}/requests/${requestId}/answer`,
+      `/mandates/${mandateId}/requests-to-client/${requestId}/answer/`,
       params
     );
     return response.data;
@@ -252,6 +256,7 @@ export class CaseManagementClient {
 
   /**
    * Upload a document to a request to client answer
+   * IMPORTANT: For fileupload type requests, upload all documents FIRST, then submit the answer.
    * @param mandateId - The mandate ID
    * @param requestId - The request ID
    * @param file - File data (File, Blob, or FormData)
@@ -260,9 +265,9 @@ export class CaseManagementClient {
     mandateId: string,
     requestId: string,
     file: File | Blob | FormData
-  ): Promise<any> {
-    const response = await this.httpClient.post<any>(
-      `/mandates/${mandateId}/requests/${requestId}/documents`,
+  ): Promise<RequestToClient> {
+    const response = await this.httpClient.post<RequestToClient>(
+      `/mandates/${mandateId}/requests-to-client/${requestId}/answer/documents/`,
       file,
       { 'Content-Type': 'multipart/form-data' }
     );
@@ -337,10 +342,11 @@ export class CaseManagementClient {
   // ==================== Info ====================
 
   /**
-   * Get current user information
+   * Get current user/token information
+   * Useful for testing your authentication
    */
-  async getUserInfo(): Promise<UserInfo> {
-    const response = await this.httpClient.get<UserInfo>('/info/user');
+  async getUserInfo(): Promise<UserInfo[]> {
+    const response = await this.httpClient.get<UserInfo[]>('/info/');
     return response.data;
   }
 }

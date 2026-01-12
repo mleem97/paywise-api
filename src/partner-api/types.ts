@@ -1,35 +1,61 @@
 /**
  * Types for Partner API
+ * Based on official Paywise API documentation
  */
 
+// ==================== Common Types ====================
+
 /**
- * Company object
+ * Paginated list response
  */
-export interface Company {
-  id: string;
-  name: string;
-  legalForm?: string;
-  taxId?: string;
-  registrationNumber?: string;
-  address?: CompanyAddress;
-  contactEmail?: string;
-  contactPhone?: string;
-  status?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  [key: string]: any;
+export interface PaginatedResponse<T> {
+  count: number;
+  next?: string | null;
+  previous?: string | null;
+  results: T[];
 }
+
+// ==================== Companies ====================
 
 /**
  * Company address
  */
 export interface CompanyAddress {
-  street?: string;
-  houseNumber?: string;
-  postalCode?: string;
-  city?: string;
-  country?: string;
-  [key: string]: any;
+  street: string | null;
+  zip: string | null;
+  city: string | null;
+  country: string;
+}
+
+/**
+ * Contact person for company
+ */
+export interface ContactPerson {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+}
+
+/**
+ * Company object
+ */
+export interface Company {
+  href: string;
+  id?: string;
+  name: string;
+  legal_form?: string;
+  vat_id?: string;
+  tax_number?: string;
+  registration_court?: string;
+  registration_number?: string;
+  legal_representatives?: string;
+  address?: CompanyAddress;
+  contact_person?: ContactPerson;
+  status: 'pending' | 'active' | 'suspended' | 'closed';
+  dca_client_no?: string;
+  created: string;
+  updated: string;
 }
 
 /**
@@ -37,13 +63,14 @@ export interface CompanyAddress {
  */
 export interface CreateCompanyParams {
   name: string;
-  legalForm?: string;
-  taxId?: string;
-  registrationNumber?: string;
+  legal_form?: string;
+  vat_id?: string;
+  tax_number?: string;
+  registration_court?: string;
+  registration_number?: string;
+  legal_representatives?: string;
   address?: CompanyAddress;
-  contactEmail?: string;
-  contactPhone?: string;
-  [key: string]: any;
+  contact_person?: ContactPerson;
 }
 
 /**
@@ -51,50 +78,69 @@ export interface CreateCompanyParams {
  */
 export interface UpdateCompanyParams {
   name?: string;
-  legalForm?: string;
-  taxId?: string;
-  registrationNumber?: string;
+  legal_form?: string;
+  vat_id?: string;
+  tax_number?: string;
+  registration_court?: string;
+  registration_number?: string;
+  legal_representatives?: string;
   address?: CompanyAddress;
-  contactEmail?: string;
-  contactPhone?: string;
-  [key: string]: any;
+  contact_person?: ContactPerson;
 }
 
 /**
  * Parameters for listing companies
  */
 export interface ListCompaniesParams {
+  dca_client_no?: string;
   id?: string;
   limit?: number;
-  offset?: number;
   name?: string;
-  [key: string]: any;
+  offset?: number;
+  status?: string;
 }
 
 /**
  * Company list response
  */
-export interface CompanyListResponse {
-  count: number;
-  next?: string | null;
-  previous?: string | null;
-  results: Company[];
+export type CompanyListResponse = PaginatedResponse<Company>;
+
+// ==================== Users ====================
+
+/**
+ * User status
+ */
+export type UserStatus = 'active' | 'inactive';
+
+/**
+ * User role
+ */
+export type UserRole = 'admin' | 'user' | 'viewer';
+
+/**
+ * Company reference in user
+ */
+export interface UserCompanyReference {
+  href: string;
+  id: string;
+  name: string;
 }
 
 /**
  * User object
  */
 export interface User {
-  id: string;
+  href: string;
+  id?: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  companyId?: string;
-  roles?: string[];
-  status?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  [key: string]: any;
+  first_name: string;
+  last_name: string;
+  company: UserCompanyReference;
+  role: UserRole;
+  status: UserStatus;
+  last_login?: string | null;
+  created: string;
+  updated: string;
 }
 
 /**
@@ -102,48 +148,55 @@ export interface User {
  */
 export interface CreateUserParams {
   email: string;
-  firstName?: string;
-  lastName?: string;
-  companyId?: string;
-  roles?: string[];
-  [key: string]: any;
+  first_name: string;
+  last_name: string;
+  company: string;
+  role: UserRole;
 }
 
 /**
  * Parameters for listing users
  */
 export interface ListUsersParams {
+  company?: string;
+  email?: string;
+  first_name?: string;
+  id?: string;
+  last_name?: string;
   limit?: number;
   offset?: number;
-  companyId?: string;
-  email?: string;
-  [key: string]: any;
+  role?: string;
+  status?: string;
 }
 
 /**
  * User list response
  */
-export interface UserListResponse {
-  count: number;
-  next?: string | null;
-  previous?: string | null;
-  results: User[];
-}
+export type UserListResponse = PaginatedResponse<User>;
+
+// ==================== User Invites ====================
+
+/**
+ * User invite status
+ */
+export type UserInviteStatus = 'pending' | 'accepted' | 'expired' | 'revoked';
 
 /**
  * User invite object
  */
 export interface UserInvite {
-  id: string;
+  href: string;
+  id?: string;
   email: string;
-  companyId?: string;
-  roles?: string[];
-  status?: string;
-  inviteUrl?: string;
-  expiresAt?: string;
-  createdAt?: string;
-  acceptedAt?: string;
-  [key: string]: any;
+  first_name: string;
+  last_name: string;
+  company: UserCompanyReference;
+  role: UserRole;
+  status: UserInviteStatus;
+  invite_url?: string;
+  expires_at: string;
+  created: string;
+  accepted_at?: string | null;
 }
 
 /**
@@ -151,33 +204,38 @@ export interface UserInvite {
  */
 export interface CreateUserInviteParams {
   email: string;
-  companyId?: string;
-  roles?: string[];
-  [key: string]: any;
+  first_name: string;
+  last_name: string;
+  company: string;
+  role: UserRole;
 }
 
 /**
  * Onboarded user object
  */
 export interface OnboardedUser {
+  href: string;
   id: string;
-  inviteId: string;
-  userId: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  companyId?: string;
-  onboardedAt?: string;
-  [key: string]: any;
+  first_name: string;
+  last_name: string;
+  company: UserCompanyReference;
+  role: UserRole;
+  status: UserStatus;
+  created: string;
+  updated: string;
 }
 
+// ==================== Partner Info ====================
+
 /**
- * Token info object
+ * Partner info object
  */
-export interface TokenInfo {
-  userId?: string;
-  companyId?: string;
-  scopes?: string[];
-  expiresAt?: string;
-  [key: string]: any;
+export interface PartnerInfo {
+  id: string;
+  token_name: string;
+  user: string;
+  user_first_name: string;
+  user_last_name: string;
+  access_mode: string;
 }

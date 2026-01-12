@@ -39,9 +39,9 @@ export type {
   MandateListResponse,
   ListMandatesParams,
   StatusUpdate,
-  StatusUpdateListResponse,
   RequestToClient,
   RequestToClientListResponse,
+  ListRequestsToClientParams,
   SubmitRequestAnswerParams,
   Payment,
   PaymentListResponse,
@@ -52,6 +52,7 @@ export type {
   ListStatementsParams,
   MandateDetail,
   MandateDetailsListResponse,
+  ListMandateDetailsParams,
   UserInfo,
 } from './case-management/types';
 
@@ -71,7 +72,7 @@ export type {
   UserInvite,
   CreateUserInviteParams,
   OnboardedUser,
-  TokenInfo,
+  PartnerInfo,
 } from './partner-api/types';
 
 // Default export
