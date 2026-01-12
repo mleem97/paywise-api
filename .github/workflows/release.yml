@@ -22,12 +22,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
       # Remove "|| true" once you have real tests
-      - run: npm test || true 
+      - run: npm test --passWithNoTests || true 
 
   publish:
     name: Semantic Release
@@ -46,7 +46,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
