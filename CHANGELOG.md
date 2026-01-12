@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+
+## [1.1.1] - 2026-01-12
+
+### Changed
+
+- ensure consistent semantic-release tag format configuration ([96077a8](https://github.com/mleem97/paywise-api/commit/96077a8778ed5314fd0d3ecbf1b690f9ada6c690))
+
+### Fixed
+
+- resolve TypeScript and type safety errors ([3d532ba](https://github.com/mleem97/paywise-api/commit/3d532ba4169c404706130465169f054d29d47ffe))
 ## [1.0.0] - 2026-01-12
 
 ### Added
