@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.0.0] - 2026-01-12
+
+### Added
+
+- add flexible parameter types for listing claims, debtors, mandates, requests, payments, statements, companies, and users ([c6a8b50](https://github.com/mleem97/paywise-api/commit/c6a8b5041ea93d9528bd4d444936b6ba60f364fe))
+- add Keep a Changelog format support for semantic-release ([ff13716](https://github.com/mleem97/paywise-api/commit/ff13716fea624925754e81c8e6657994b444f359))
+- add automated CI/CD with semantic-release
+- add NPM Trusted Publishers (OIDC) support
+
+### Changed
+
+- update ApiResponse and ApiError types for better type safety ([d22db97](https://github.com/mleem97/paywise-api/commit/d22db9768cf444d470e7997aa912b142c4983395))
+- upgrade to Node.js 22 for semantic-release compatibility ([105fa80](https://github.com/mleem97/paywise-api/commit/105fa801dfb69c9c594ef83b7c99dab5c982ef41))
+- Field names now use snake_case to match API
+
+### Fixed
+
+- resolve TypeScript and type safety errors ([3d532ba](https://github.com/mleem97/paywise-api/commit/3d532ba4169c404706130465169f054d29d47ffe))
+- v1.1.0 - API corrections and CI/CD pipeline ([4004bc4](https://github.com/mleem97/paywise-api/commit/4004bc4bb2837429d4ea920261741fb747235fb5))
+- all endpoint URLs corrected to match Paywise documentation
 ## [1.1.0] - 2026-01-12
 
 ### Added
