@@ -1,6 +1,7 @@
 # paywise-api
 
 [![npm version](https://img.shields.io/npm/v/paywise-api.svg)](https://www.npmjs.com/package/paywise-api)
+[![Release Pipeline](https://github.com/mleem97/paywise-api/actions/workflows/release.yml/badge.svg)](https://github.com/mleem97/paywise-api/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub](https://img.shields.io/badge/GitHub-mleem97%2Fpaywise--api-blue)](https://github.com/mleem97/paywise-api)
 
