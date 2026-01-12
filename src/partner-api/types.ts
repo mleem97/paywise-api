@@ -92,6 +92,7 @@ export interface UpdateCompanyParams {
  * Parameters for listing companies
  */
 export interface ListCompaniesParams {
+  [key: string]: string | number | boolean | undefined;
   dca_client_no?: string;
   id?: string;
   limit?: number;
@@ -158,6 +159,7 @@ export interface CreateUserParams {
  * Parameters for listing users
  */
 export interface ListUsersParams {
+  [key: string]: string | number | boolean | undefined;
   company?: string;
   email?: string;
   first_name?: string;

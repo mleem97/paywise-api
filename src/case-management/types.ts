@@ -189,6 +189,7 @@ export interface ReleaseClaimParams {
  * Parameters for listing claims
  */
 export interface ListClaimsParams {
+  [key: string]: string | number | boolean | undefined;
   claim_disputed?: boolean;
   delay_date?: string;
   document_reference?: string;
@@ -318,6 +319,7 @@ export interface CreateDebtorParams {
  * Parameters for listing debtors
  */
 export interface ListDebtorsParams {
+  [key: string]: string | number | boolean | undefined;
   acting_as?: string;
   id?: string;
   limit?: number;
@@ -471,6 +473,7 @@ export interface Mandate {
  * Parameters for listing mandates
  */
 export interface ListMandatesParams {
+  [key: string]: string | number | boolean | undefined;
   archived?: boolean;
   debtor?: string;
   debtor_organization_name?: string;
@@ -565,6 +568,7 @@ export interface RequestToClient {
  * Parameters for listing requests to client
  */
 export interface ListRequestsToClientParams {
+  [key: string]: string | number | boolean | undefined;
   answered?: boolean;
   limit?: number;
   offset?: number;
@@ -614,6 +618,7 @@ export interface CreatePaymentParams {
  * Parameters for listing payments
  */
 export interface ListPaymentsParams {
+  [key: string]: string | number | boolean | undefined;
   limit?: number;
   offset?: number;
 }
@@ -705,6 +710,7 @@ export interface Statement {
  * Parameters for listing statements
  */
 export interface ListStatementsParams {
+  [key: string]: string | number | boolean | undefined;
   booking_date?: string;
   clearing_no?: string;
   id?: string;
