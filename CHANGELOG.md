@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [1.2.0] - 2026-01-12
+
+### Added
+
+- add comprehensive mock-based tests and Husky pre-commit hooks ([df2b197](https://github.com/mleem97/paywise-api/commit/df2b1978f92e36e61afcc2db264e6fa1455a304d))
 ## [1.1.1] - 2026-01-12
 
 ### Changed
