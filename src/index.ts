@@ -1,6 +1,10 @@
 /**
  * Paywise API - TypeScript/JavaScript client library
  * 
+ * Repository: https://github.com/mleem97/paywise-api
+ * Package: https://www.npmjs.com/package/paywise-api
+ * License: MIT
+ * 
  * @packageDocumentation
  */
 

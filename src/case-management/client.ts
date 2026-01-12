@@ -1,3 +1,13 @@
+/**
+ * Case Management API Client
+ * Handles all interactions with the Paywise Case Management API
+ * 
+ * Repository: https://github.com/mleem97/paywise-api
+ * Package: https://www.npmjs.com/package/paywise-api
+ * Documentation: https://docs.paywise.de/case-management/
+ * License: MIT
+ */
+
 import { HttpClient } from '../http-client';
 import {
   Claim,

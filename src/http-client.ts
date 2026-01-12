@@ -1,3 +1,12 @@
+/**
+ * HTTP Client for Paywise API requests
+ * Supports both Node.js and browser environments
+ * 
+ * Repository: https://github.com/mleem97/paywise-api
+ * Package: https://www.npmjs.com/package/paywise-api
+ * License: MIT
+ */
+
 import { PaywiseConfig, HttpMethod, ApiResponse, ApiError, QueryParams } from './types';
 
 /**

@@ -1,3 +1,8 @@
+# Release Pipeline for paywise-api
+# Repository: https://github.com/mleem97/paywise-api
+# Package: https://www.npmjs.com/package/paywise-api
+# Automated versioning and publishing with semantic-release
+
 name: Release Pipeline
 
 on:

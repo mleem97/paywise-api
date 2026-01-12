@@ -1,4 +1,5 @@
 {
+  "_comment": "TypeScript configuration for paywise-api | Repository: https://github.com/mleem97/paywise-api",
   "compilerOptions": {
     "target": "ES2020",
     "module": "NodeNext",

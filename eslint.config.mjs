@@ -1,3 +1,12 @@
+/**
+ * ESLint configuration for paywise-api
+ * Uses ESLint v9 flat config format
+ * 
+ * Repository: https://github.com/mleem97/paywise-api
+ * Package: https://www.npmjs.com/package/paywise-api
+ * License: MIT
+ */
+
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 

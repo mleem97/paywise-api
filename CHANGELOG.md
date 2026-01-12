@@ -7,12 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-
-## [1.1.0] - 2026-01-12
-
-### Added
-
-- add Keep a Changelog format support for semantic-release ([ff13716](https://github.com/mleem97/paywise-api/commit/ff13716fea624925754e81c8e6657994b444f359))
 ## [1.1.0] - 2026-01-12
 
 ### Added
@@ -21,11 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ESLint linting on every push/PR
   - Jest testing framework configured
   - Semantic Release for automated versioning and npm publishing
-  - NPM Trusted Publishers (OIDC) support with token fallback
+  - NPM Trusted Publishers (OIDC) support with GitHub Actions environment
+  - Keep a Changelog format support with custom update script
 - "Web Automation & Billing Integration" section in README
   - Complete example for automated dunning handoff
   - Best practices for SaaS/E-Commerce integration
 - Configuration files: `eslint.config.mjs`, `jest.config.js`, `.github/workflows/release.yml`
+- Repository information comments in all source and configuration files
+- Maintainer and NPM package metadata in `package.json`
 
 ### Changed
 
@@ -46,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added missing types: `Amount`, `Metadata`, `Event`, `LegalClaimBalance`, etc.
   - Corrected nested object structures for Claims, Debtors, Mandates, Statements
 - TypeScript config updated to `moduleResolution: NodeNext` for TypeScript 5.x compatibility
+- README updated with maintainer information and improved feature descriptions
 
 ### Fixed
 

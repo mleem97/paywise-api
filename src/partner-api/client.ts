@@ -1,3 +1,13 @@
+/**
+ * Partner API Client
+ * Handles all interactions with the Paywise Partner API
+ * 
+ * Repository: https://github.com/mleem97/paywise-api
+ * Package: https://www.npmjs.com/package/paywise-api
+ * Documentation: https://docs.paywise.de/partner-api/
+ * License: MIT
+ */
+
 import { HttpClient } from '../http-client';
 import {
   Company,

@@ -1,6 +1,7 @@
 {
+  "_comment": "Repository: https://github.com/mleem97/paywise-api | Package: https://www.npmjs.com/package/paywise-api | License: MIT",
   "name": "paywise-api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "TypeScript/JavaScript client library for Paywise API (Case Management & Partner APIs)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,14 +23,26 @@
     "typescript",
     "payment"
   ],
-  "author": "",
+  "author": "mleem97",
+  "maintainers": [
+    {
+      "name": "mleem97",
+      "email": "mleem97@users.noreply.github.com",
+      "url": "https://github.com/mleem97"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/mleem97/paywise-api.git"
   },
+  "bugs": {
+    "url": "https://github.com/mleem97/paywise-api/issues"
+  },
+  "homepage": "https://github.com/mleem97/paywise-api#readme",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "release": {
     "branches": [

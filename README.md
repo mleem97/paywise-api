@@ -2,21 +2,27 @@
 
 [![npm version](https://img.shields.io/npm/v/paywise-api.svg)](https://www.npmjs.com/package/paywise-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Lunexor](https://img.shields.io/badge/Maintained%20by-Lunexor-blueviolet)](https://www.npmjs.com/org/lunexor)
+[![GitHub](https://img.shields.io/badge/GitHub-mleem97%2Fpaywise--api-blue)](https://github.com/mleem97/paywise-api)
 
-The unofficial **Community Implementation** of the Paywise API for TypeScript and JavaScript.
-Brought to you by **Lunexor**.
+**TypeScript/JavaScript client library for Paywise API**
+
+Complete implementation of the Paywise Case Management and Partner APIs with full type safety and zero dependencies.
+
+**Maintained by:** [@mleem97](https://github.com/mleem97)  
+**NPM Package:** [@paywise-api](https://www.npmjs.com/package/paywise-api)
 
 ---
 
 ## Features
 
-- ✅ **Community Driven** - Open source implementation for the community.
-- ✅ **Full TypeScript Support** - Native type definitions for all models and endpoints.
-- ✅ **Universal Compatibility** - Works with **npm**, **pnpm**, **yarn**, and **bun**.
-- ✅ **Case Management API** - Manage Claims, Debtors, Mandates, Payments, and Statements.
-- ✅ **Partner API** - Manage Companies, Users, and User Invites.
-- ✅ **Isomorphic** - Compatible with **Node.js** and **Browser** environments.
+- ✅ **Full TypeScript Support** - Native type definitions for all models and endpoints
+- ✅ **Complete API Coverage** - Both Case Management and Partner APIs fully implemented
+- ✅ **Case Management API** - Manage Claims, Debtors, Mandates, Payments, Statements, and Requests
+- ✅ **Partner API** - Manage Companies, Users, and User Invites
+- ✅ **Isomorphic** - Works in both **Node.js** and **Browser** environments
+- ✅ **Zero Dependencies** - Lightweight and fast
+- ✅ **Production Ready** - Semantic versioning and automated releases
+- ✅ **Well Documented** - Comprehensive JSDoc comments and examples
 
 ## Installation
 

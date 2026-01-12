@@ -1,3 +1,11 @@
+/**
+ * Paywise API Client - Main entry point
+ * 
+ * Repository: https://github.com/mleem97/paywise-api
+ * Package: https://www.npmjs.com/package/paywise-api
+ * License: MIT
+ */
+
 import { PaywiseConfig } from './types';
 import { HttpClient } from './http-client';
 import { CaseManagementClient } from './case-management/client';
