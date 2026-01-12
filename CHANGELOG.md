@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.1.0] - 2026-01-12
+
+### Added
+
+- add Keep a Changelog format support for semantic-release ([ff13716](https://github.com/mleem97/paywise-api/commit/ff13716fea624925754e81c8e6657994b444f359))
 ## [1.1.0] - 2026-01-12
 
 ### Added
