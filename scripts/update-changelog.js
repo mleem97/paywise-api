@@ -3,9 +3,10 @@
  * Updates CHANGELOG.md to Keep a Changelog format
  * Used by semantic-release via @semantic-release/exec
  */
+/* eslint-env node */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const version = process.argv[2];
 const notes = process.argv[3] || '';
