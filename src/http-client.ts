@@ -57,11 +57,11 @@ export class HttpClient {
   /**
    * Make HTTP request
    */
-  private async request<T = any>(
+  private async request<T = Record<string, unknown>>(
     method: HttpMethod,
     endpoint: string,
     options?: {
-      body?: any;
+      body?: Record<string, unknown> | FormData | Blob | File;
       params?: QueryParams;
       headers?: Record<string, string>;
     }
@@ -93,29 +93,32 @@ export class HttpClient {
       if (contentType && contentType.includes('application/json')) {
         data = (await response.json()) as T;
       } else {
-        data = (await response.text()) as any;
+        data = (await response.text()) as unknown as T;
       }
 
       if (!response.ok) {
+        const parsedData = data as Record<string, unknown> | null;
+        const message = typeof data === 'string' ? data : (typeof parsedData?.message === 'string' ? parsedData.message : response.statusText);
+        const code = typeof parsedData?.code === 'string' ? parsedData.code : undefined;
         const error: ApiError = {
-          message: typeof data === 'string' ? data : (data as any)?.message || response.statusText,
+          message,
           status: response.status,
-          code: (data as any)?.code,
+          code,
           details: data,
         };
         throw error;
       }
 
       return {
-        data,
+        data: data as T,
         status: response.status,
         statusText: response.statusText,
         headers: responseHeaders,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       clearTimeout(timeoutId);
       
-      if (error.name === 'AbortError') {
+      if ((error as Record<string, unknown>)?.name === 'AbortError') {
         const timeoutError: ApiError = {
           message: 'Request timeout',
           code: 'TIMEOUT',
@@ -130,35 +133,35 @@ export class HttpClient {
   /**
    * GET request
    */
-  async get<T = any>(endpoint: string, params?: QueryParams, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+  async get<T = Record<string, unknown>>(endpoint: string, params?: QueryParams, headers?: Record<string, string>): Promise<ApiResponse<T>> {
     return this.request<T>('GET', endpoint, { params, headers });
   }
 
   /**
    * POST request
    */
-  async post<T = any>(endpoint: string, body?: any, headers?: Record<string, string>): Promise<ApiResponse<T>> {
-    return this.request<T>('POST', endpoint, { body, headers });
+  async post<T = Record<string, unknown>>(endpoint: string, body?: unknown, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+    return this.request<T>('POST', endpoint, { body: body as Record<string, unknown> | FormData | Blob | File | undefined, headers });
   }
 
   /**
    * PUT request
    */
-  async put<T = any>(endpoint: string, body?: any, headers?: Record<string, string>): Promise<ApiResponse<T>> {
-    return this.request<T>('PUT', endpoint, { body, headers });
+  async put<T = Record<string, unknown>>(endpoint: string, body?: unknown, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+    return this.request<T>('PUT', endpoint, { body: body as Record<string, unknown> | FormData | Blob | File | undefined, headers });
   }
 
   /**
    * PATCH request
    */
-  async patch<T = any>(endpoint: string, body?: any, headers?: Record<string, string>): Promise<ApiResponse<T>> {
-    return this.request<T>('PATCH', endpoint, { body, headers });
+  async patch<T = Record<string, unknown>>(endpoint: string, body?: unknown, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+    return this.request<T>('PATCH', endpoint, { body: body as Record<string, unknown> | FormData | Blob | File | undefined, headers });
   }
 
   /**
    * DELETE request
    */
-  async delete<T = any>(endpoint: string, params?: QueryParams, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+  async delete<T = Record<string, unknown>>(endpoint: string, params?: QueryParams, headers?: Record<string, string>): Promise<ApiResponse<T>> {
     return this.request<T>('DELETE', endpoint, { params, headers });
   }
 }

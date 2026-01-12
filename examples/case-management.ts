@@ -20,90 +20,101 @@ async function main() {
     // 1. Create a debtor
     console.log('1. Creating a new debtor...');
     const newDebtor = await client.caseManagement.createDebtor({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      type: 'person',
+      acting_as: 'business',
+      addresses: [
+        {
+          street: 'Main Street',
+          zip: '10115',
+          city: 'Berlin',
+          country: 'Germany',
+        },
+      ],
+      person: {
+        first_name: 'John',
+        last_name: 'Doe',
+        birth_date: '1990-01-01',
+      },
     });
     console.log('Created debtor:', newDebtor.id);
 
-    // 2. Add address to debtor
-    console.log('\n2. Adding address to debtor...');
-    await client.caseManagement.addDebtorAddress(newDebtor.id, {
-      street: 'Main Street',
-      houseNumber: '123',
-      postalCode: '12345',
-      city: 'Berlin',
-      country: 'Germany',
-    });
-    console.log('Address added successfully');
-
-    // 3. Create a claim
-    console.log('\n3. Creating a new claim...');
+    // 2. Create a claim
+    console.log('\n2. Creating a new claim...');
+    const newClaimId = newDebtor.id;
+    if (!newClaimId) {
+      throw new Error('Failed to create debtor - no ID returned');
+    }
     const newClaim = await client.caseManagement.createClaim({
-      debtorId: newDebtor.id,
-      amount: 1500.00,
-      currency: 'EUR',
-      description: 'Invoice payment for services',
-      invoiceNumber: 'INV-2024-001',
-      invoiceDate: '2024-01-15',
-      dueDate: '2024-02-15',
+      debtor: newClaimId,
+      your_reference: 'REF-001',
+      subject_matter: 'Invoice payment',
+      occurence_date: '2024-01-15',
+      document_reference: 'INV-2024-001',
+      document_date: '2024-01-15',
+      due_date: '2024-02-15',
+      reminder_date: '2024-02-20',
+      delay_date: '2024-03-01',
+      total_claim_amount: { value: '1500.00', currency: 'EUR' },
+      main_claim_amount: { value: '1500.00', currency: 'EUR' },
+      starting_approach: 'extrajudicial',
+      claim_disputed: false,
+      obligation_fulfilled: false,
     });
     console.log('Created claim:', newClaim.id);
 
-    // 4. List all claims
-    console.log('\n4. Listing all claims...');
+    // 3. List all claims
+    console.log('\n3. Listing all claims...');
     const claims = await client.caseManagement.listClaims({
       limit: 10,
     });
     console.log(`Found ${claims.count} claims`);
-    claims.results.forEach((claim, index) => {
-      console.log(`  ${index + 1}. ${claim.description} - ${claim.amount} ${claim.currency}`);
-    });
+    if (claims.results.length > 0) {
+      claims.results.forEach((claim, index) => {
+        console.log(`  ${index + 1}. Claim ${claim.id}`);
+      });
+    }
 
-    // 5. Get claim details
-    console.log('\n5. Getting claim details...');
-    const claimDetails = await client.caseManagement.getClaim(newClaim.id);
+    // 4. Get claim details
+    console.log('\n4. Getting claim details...');
+    const claimId = newClaim.id;
+    if (!claimId) {
+      throw new Error('Failed to create claim - no ID returned');
+    }
+    const claimDetails = await client.caseManagement.getClaim(claimId);
     console.log('Claim details:', {
       id: claimDetails.id,
-      amount: claimDetails.amount,
-      status: claimDetails.status,
+      debtor: claimDetails.debtor,
     });
 
-    // 6. Release claim for processing
-    console.log('\n6. Releasing claim for processing...');
-    const releasedClaim = await client.caseManagement.releaseClaim(newClaim.id);
-    console.log('Claim released:', releasedClaim.status);
+    // 5. Release claim for processing
+    console.log('\n5. Releasing claim for processing...');
+    const releasedClaim = await client.caseManagement.releaseClaim(claimId);
+    console.log('Claim released:', releasedClaim.id);
 
-    // 7. List debtors
-    console.log('\n7. Listing debtors...');
+    // 6. List debtors
+    console.log('\n6. Listing debtors...');
     const debtors = await client.caseManagement.listDebtors({
       limit: 10,
     });
     console.log(`Found ${debtors.count} debtors`);
 
-    // 8. List mandates
-    console.log('\n8. Listing mandates...');
+    // 7. List mandates
+    console.log('\n7. Listing mandates...');
     const mandates = await client.caseManagement.listMandates({
-      claimId: newClaim.id,
       limit: 10,
     });
     console.log(`Found ${mandates.count} mandates`);
 
-    // 9. List payments
-    console.log('\n9. Listing payments...');
+    // 8. List payments
+    console.log('\n8. Listing payments...');
     const payments = await client.caseManagement.listPayments({
       limit: 10,
     });
     console.log(`Found ${payments.count} payments`);
 
-    // 10. Get user info
-    console.log('\n10. Getting user info...');
+    // 9. Get user info
+    console.log('\n9. Getting user info...');
     const userInfo = await client.caseManagement.getUserInfo();
-    console.log('User info:', {
-      email: userInfo.email,
-      companyId: userInfo.companyId,
-    });
+    console.log('User info retrieved successfully');
 
     console.log('\n✅ All examples completed successfully!');
   } catch (error) {

@@ -39,9 +39,7 @@ jobs:
     needs: quality-check
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: 
-      name: npm-publish
-      url: https://www.npmjs.com/package/paywise-api
+    environment: npm-publish
     permissions:
       contents: write
       issues: write

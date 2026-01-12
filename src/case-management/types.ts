@@ -155,6 +155,7 @@ export interface Claim {
  * Parameters for creating a claim
  */
 export interface CreateClaimParams {
+  [key: string]: unknown;
   debtor: string;
   your_reference: string | null;
   subject_matter: string | null;
@@ -241,6 +242,7 @@ export type CommunicationChannelType =
  * Address object
  */
 export interface Address {
+  [key: string]: unknown;
   street: string | null;
   zip: string | null;
   city: string | null;
@@ -251,6 +253,7 @@ export interface Address {
  * Bank account object
  */
 export interface BankAccount {
+  [key: string]: unknown;
   iban: string;
   bic?: string | null;
 }
@@ -259,6 +262,7 @@ export interface BankAccount {
  * Communication channel object
  */
 export interface CommunicationChannel {
+  [key: string]: unknown;
   type: CommunicationChannelType;
   value: string;
 }
@@ -304,6 +308,7 @@ export interface Debtor {
  * Parameters for creating a debtor
  */
 export interface CreateDebtorParams {
+  [key: string]: unknown;
   acting_as: DebtorActingAs;
   addresses: Address[];
   your_reference?: string | null;
@@ -578,6 +583,7 @@ export interface ListRequestsToClientParams {
  * Parameters for submitting request answer
  */
 export interface SubmitRequestAnswerParams {
+  [key: string]: unknown;
   text?: string | null;
   additional_comment?: string | null;
 }
@@ -607,6 +613,7 @@ export interface Payment {
  * Parameters for creating a payment
  */
 export interface CreatePaymentParams {
+  [key: string]: unknown;
   claim: string;
   amount: Amount;
   value_date: string;

@@ -21,19 +21,21 @@ async function main() {
     console.log('1. Creating a new company...');
     const newCompany = await client.partner.createCompany({
       name: 'Tech Solutions Inc',
-      legalForm: 'GmbH',
-      taxId: 'DE123456789',
+      legal_form: 'GmbH',
+      vat_id: 'DE123456789',
       address: {
         street: 'Tech Street',
-        houseNumber: '123',
-        postalCode: '10115',
+        zip: '10115',
         city: 'Berlin',
         country: 'Germany',
       },
-      contactEmail: 'contact@techsolutions.com',
-      contactPhone: '+49301234567',
     });
     console.log('Created company:', newCompany.id);
+
+    const companyId = newCompany.id;
+    if (!companyId) {
+      throw new Error('Failed to create company - no ID returned');
+    }
 
     // 2. List all companies
     console.log('\n2. Listing all companies...');
@@ -47,77 +49,78 @@ async function main() {
 
     // 3. Get company details
     console.log('\n3. Getting company details...');
-    const companyDetails = await client.partner.getCompany(newCompany.id);
+    const companyDetails = await client.partner.getCompany(companyId);
     console.log('Company details:', {
       id: companyDetails.id,
       name: companyDetails.name,
-      taxId: companyDetails.taxId,
     });
 
     // 4. Update company information
     console.log('\n4. Updating company...');
-    const updatedCompany = await client.partner.updateCompany(newCompany.id, {
-      contactEmail: 'info@techsolutions.com',
+    const updatedCompany = await client.partner.updateCompany(companyId, {
+      name: 'Tech Solutions Inc. Updated',
     });
-    console.log('Company updated, new email:', updatedCompany.contactEmail);
+    console.log('Company updated:', updatedCompany.name);
 
     // 5. Create a user
     console.log('\n5. Creating a new user...');
     const newUser = await client.partner.createUser({
       email: 'jane.smith@techsolutions.com',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      companyId: newCompany.id,
-      roles: ['admin', 'user'],
+      first_name: 'Jane',
+      last_name: 'Smith',
+      company: companyId,
+      role: 'admin',
     });
     console.log('Created user:', newUser.id);
+
+    const userId = newUser.id;
+    if (!userId) {
+      throw new Error('Failed to create user - no ID returned');
+    }
 
     // 6. List users
     console.log('\n6. Listing users...');
     const users = await client.partner.listUsers({
-      companyId: newCompany.id,
+      company: companyId,
       limit: 10,
     });
     console.log(`Found ${users.count} users`);
     users.results.forEach((user, index) => {
-      console.log(`  ${index + 1}. ${user.email} (${user.roles?.join(', ')})`);
+      console.log(`  ${index + 1}. ${user.email}`);
     });
 
     // 7. Get user details
     console.log('\n7. Getting user details...');
-    const userDetails = await client.partner.getUser(newUser.id);
+    const userDetails = await client.partner.getUser(userId);
     console.log('User details:', {
       id: userDetails.id,
       email: userDetails.email,
-      companyId: userDetails.companyId,
     });
 
     // 8. Create a user invite
     console.log('\n8. Creating user invite...');
     const invite = await client.partner.createUserInvite({
       email: 'newuser@techsolutions.com',
-      companyId: newCompany.id,
-      roles: ['user'],
+      first_name: 'New',
+      last_name: 'User',
+      company: companyId,
+      role: 'user',
     });
     console.log('User invite created:', invite.id);
-    console.log('Invite URL:', invite.inviteUrl);
+    console.log('Invite URL:', invite.invite_url);
+
+    const inviteId = invite.id;
+    if (!inviteId) {
+      throw new Error('Failed to create invite - no ID returned');
+    }
 
     // 9. Get invite details
     console.log('\n9. Getting invite details...');
-    const inviteDetails = await client.partner.getUserInvite(invite.id);
+    const inviteDetails = await client.partner.getUserInvite(inviteId);
     console.log('Invite details:', {
       id: inviteDetails.id,
       email: inviteDetails.email,
       status: inviteDetails.status,
-    });
-
-    // 10. Get token info
-    console.log('\n10. Getting token info...');
-    const tokenInfo = await client.partner.getTokenInfo();
-    console.log('Token info:', {
-      userId: tokenInfo.userId,
-      companyId: tokenInfo.companyId,
-      scopes: tokenInfo.scopes,
     });
 
     console.log('\n✅ All examples completed successfully!');

@@ -62,6 +62,7 @@ export interface Company {
  * Parameters for creating a company
  */
 export interface CreateCompanyParams {
+  [key: string]: unknown;
   name: string;
   legal_form?: string;
   vat_id?: string;
@@ -77,6 +78,7 @@ export interface CreateCompanyParams {
  * Parameters for updating a company
  */
 export interface UpdateCompanyParams {
+  [key: string]: unknown;
   name?: string;
   legal_form?: string;
   vat_id?: string;
@@ -148,6 +150,7 @@ export interface User {
  * Parameters for creating a user
  */
 export interface CreateUserParams {
+  [key: string]: unknown;
   email: string;
   first_name: string;
   last_name: string;
@@ -205,6 +208,7 @@ export interface UserInvite {
  * Parameters for creating a user invite
  */
 export interface CreateUserInviteParams {
+  [key: string]: unknown;
   email: string;
   first_name: string;
   last_name: string;
