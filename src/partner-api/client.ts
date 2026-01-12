@@ -1,18 +1,18 @@
 import { HttpClient } from '../http-client';
 import {
-  Partner,
-  PartnerListResponse,
-  CreatePartnerParams,
-  UpdatePartnerParams,
-  ListPartnersParams,
-  PartnerTransaction,
-  PartnerTransactionListResponse,
-  CreatePartnerTransactionParams,
-  PartnerAnalytics,
-  PartnerAnalyticsParams,
-  PartnerApiKey,
-  PartnerApiKeyListResponse,
-  CreatePartnerApiKeyParams,
+  Company,
+  CompanyListResponse,
+  CreateCompanyParams,
+  UpdateCompanyParams,
+  ListCompaniesParams,
+  User,
+  UserListResponse,
+  CreateUserParams,
+  ListUsersParams,
+  UserInvite,
+  CreateUserInviteParams,
+  OnboardedUser,
+  TokenInfo,
 } from './types';
 
 /**
@@ -27,174 +27,110 @@ export class PartnerApiClient {
     this.httpClient = httpClient;
   }
 
+  // ==================== Companies ====================
+
   /**
-   * List all partners
+   * List all companies
    * @param params - Filter and pagination parameters
    */
-  async listPartners(params?: ListPartnersParams): Promise<PartnerListResponse> {
-    const response = await this.httpClient.get<PartnerListResponse>('/partners', params);
+  async listCompanies(params?: ListCompaniesParams): Promise<CompanyListResponse> {
+    const response = await this.httpClient.get<CompanyListResponse>('/companies', params);
     return response.data;
   }
 
   /**
-   * Get a specific partner by ID
-   * @param partnerId - The partner ID
+   * Create a new company
+   * @param params - Company creation parameters
    */
-  async getPartner(partnerId: string): Promise<Partner> {
-    const response = await this.httpClient.get<Partner>(`/partners/${partnerId}`);
+  async createCompany(params: CreateCompanyParams): Promise<Company> {
+    const response = await this.httpClient.post<Company>('/companies', params);
     return response.data;
   }
 
   /**
-   * Create a new partner
-   * @param params - Partner creation parameters
+   * Get a specific company by ID
+   * @param companyId - The company ID
    */
-  async createPartner(params: CreatePartnerParams): Promise<Partner> {
-    const response = await this.httpClient.post<Partner>('/partners', params);
+  async getCompany(companyId: string): Promise<Company> {
+    const response = await this.httpClient.get<Company>(`/companies/${companyId}`);
     return response.data;
   }
 
   /**
-   * Update an existing partner
-   * @param partnerId - The partner ID
-   * @param params - Partner update parameters
+   * Update a company
+   * @param companyId - The company ID
+   * @param params - Company update parameters
    */
-  async updatePartner(partnerId: string, params: UpdatePartnerParams): Promise<Partner> {
-    const response = await this.httpClient.patch<Partner>(`/partners/${partnerId}`, params);
+  async updateCompany(companyId: string, params: UpdateCompanyParams): Promise<Company> {
+    const response = await this.httpClient.patch<Company>(`/companies/${companyId}`, params);
+    return response.data;
+  }
+
+  // ==================== Users ====================
+
+  /**
+   * List all users
+   * @param params - Filter and pagination parameters
+   */
+  async listUsers(params?: ListUsersParams): Promise<UserListResponse> {
+    const response = await this.httpClient.get<UserListResponse>('/users', params);
     return response.data;
   }
 
   /**
-   * Delete a partner
-   * @param partnerId - The partner ID
+   * Create a new user
+   * @param params - User creation parameters
    */
-  async deletePartner(partnerId: string): Promise<void> {
-    await this.httpClient.delete(`/partners/${partnerId}`);
-  }
-
-  /**
-   * Activate a partner
-   * @param partnerId - The partner ID
-   */
-  async activatePartner(partnerId: string): Promise<Partner> {
-    const response = await this.httpClient.post<Partner>(`/partners/${partnerId}/activate`);
+  async createUser(params: CreateUserParams): Promise<User> {
+    const response = await this.httpClient.post<User>('/users', params);
     return response.data;
   }
 
   /**
-   * Deactivate a partner
-   * @param partnerId - The partner ID
+   * Get a specific user by ID
+   * @param userId - The user ID
    */
-  async deactivatePartner(partnerId: string): Promise<Partner> {
-    const response = await this.httpClient.post<Partner>(`/partners/${partnerId}/deactivate`);
+  async getUser(userId: string): Promise<User> {
+    const response = await this.httpClient.get<User>(`/users/${userId}`);
+    return response.data;
+  }
+
+  // ==================== User Invites ====================
+
+  /**
+   * Create a user invite
+   * @param params - User invite creation parameters
+   */
+  async createUserInvite(params: CreateUserInviteParams): Promise<UserInvite> {
+    const response = await this.httpClient.post<UserInvite>('/user-invites', params);
     return response.data;
   }
 
   /**
-   * Suspend a partner
-   * @param partnerId - The partner ID
+   * Get a specific user invite by ID
+   * @param inviteId - The user invite ID
    */
-  async suspendPartner(partnerId: string): Promise<Partner> {
-    const response = await this.httpClient.post<Partner>(`/partners/${partnerId}/suspend`);
+  async getUserInvite(inviteId: string): Promise<UserInvite> {
+    const response = await this.httpClient.get<UserInvite>(`/user-invites/${inviteId}`);
     return response.data;
   }
 
   /**
-   * List transactions for a partner
-   * @param partnerId - The partner ID
-   * @param params - Pagination parameters
+   * Get onboarded user information from an invite
+   * @param inviteId - The user invite ID
    */
-  async listPartnerTransactions(
-    partnerId: string,
-    params?: { page?: number; limit?: number; status?: string }
-  ): Promise<PartnerTransactionListResponse> {
-    const response = await this.httpClient.get<PartnerTransactionListResponse>(
-      `/partners/${partnerId}/transactions`,
-      params
-    );
+  async getOnboardedUser(inviteId: string): Promise<OnboardedUser> {
+    const response = await this.httpClient.get<OnboardedUser>(`/user-invites/${inviteId}/onboarded-user`);
     return response.data;
   }
 
-  /**
-   * Get a specific transaction
-   * @param partnerId - The partner ID
-   * @param transactionId - The transaction ID
-   */
-  async getPartnerTransaction(partnerId: string, transactionId: string): Promise<PartnerTransaction> {
-    const response = await this.httpClient.get<PartnerTransaction>(
-      `/partners/${partnerId}/transactions/${transactionId}`
-    );
-    return response.data;
-  }
+  // ==================== Info ====================
 
   /**
-   * Create a transaction for a partner
-   * @param partnerId - The partner ID
-   * @param params - Transaction parameters
+   * Get token information
    */
-  async createPartnerTransaction(
-    partnerId: string,
-    params: CreatePartnerTransactionParams
-  ): Promise<PartnerTransaction> {
-    const response = await this.httpClient.post<PartnerTransaction>(
-      `/partners/${partnerId}/transactions`,
-      params
-    );
-    return response.data;
-  }
-
-  /**
-   * Get analytics for a partner
-   * @param partnerId - The partner ID
-   * @param params - Analytics query parameters
-   */
-  async getPartnerAnalytics(partnerId: string, params?: PartnerAnalyticsParams): Promise<PartnerAnalytics> {
-    const response = await this.httpClient.get<PartnerAnalytics>(
-      `/partners/${partnerId}/analytics`,
-      params
-    );
-    return response.data;
-  }
-
-  /**
-   * List API keys for a partner
-   * @param partnerId - The partner ID
-   */
-  async listPartnerApiKeys(partnerId: string): Promise<PartnerApiKeyListResponse> {
-    const response = await this.httpClient.get<PartnerApiKeyListResponse>(
-      `/partners/${partnerId}/api-keys`
-    );
-    return response.data;
-  }
-
-  /**
-   * Create an API key for a partner
-   * @param partnerId - The partner ID
-   * @param params - API key parameters
-   */
-  async createPartnerApiKey(partnerId: string, params?: CreatePartnerApiKeyParams): Promise<PartnerApiKey> {
-    const response = await this.httpClient.post<PartnerApiKey>(
-      `/partners/${partnerId}/api-keys`,
-      params
-    );
-    return response.data;
-  }
-
-  /**
-   * Revoke an API key
-   * @param partnerId - The partner ID
-   * @param apiKeyId - The API key ID
-   */
-  async revokePartnerApiKey(partnerId: string, apiKeyId: string): Promise<void> {
-    await this.httpClient.delete(`/partners/${partnerId}/api-keys/${apiKeyId}`);
-  }
-
-  /**
-   * Regenerate partner's primary API key
-   * @param partnerId - The partner ID
-   */
-  async regeneratePartnerApiKey(partnerId: string): Promise<Partner> {
-    const response = await this.httpClient.post<Partner>(`/partners/${partnerId}/regenerate-key`);
+  async getTokenInfo(): Promise<TokenInfo> {
+    const response = await this.httpClient.get<TokenInfo>('/info/token');
     return response.data;
   }
 }

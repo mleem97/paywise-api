@@ -2,7 +2,7 @@
  * Example: Partner API usage
  * 
  * This example demonstrates how to use the Partner API
- * to manage partners, transactions, and analytics.
+ * to manage companies, users, and user invites.
  */
 
 import { PaywiseClient } from '../src';
@@ -17,120 +17,108 @@ async function main() {
   try {
     console.log('=== Partner API Examples ===\n');
 
-    // 1. Create a new partner
-    console.log('1. Creating a new partner...');
-    const newPartner = await client.partner.createPartner({
+    // 1. Create a new company
+    console.log('1. Creating a new company...');
+    const newCompany = await client.partner.createCompany({
       name: 'Tech Solutions Inc',
-      email: 'contact@techsolutions.com',
-      type: 'reseller',
-      companyName: 'Tech Solutions Incorporated',
-      contactPerson: 'Jane Smith',
-      phone: '+1-555-0123',
+      legalForm: 'GmbH',
+      taxId: 'DE123456789',
       address: {
-        street: '123 Tech Street',
-        city: 'San Francisco',
-        state: 'CA',
-        postalCode: '94102',
-        country: 'USA',
+        street: 'Tech Street',
+        houseNumber: '123',
+        postalCode: '10115',
+        city: 'Berlin',
+        country: 'Germany',
       },
-      commission: 20,
+      contactEmail: 'contact@techsolutions.com',
+      contactPhone: '+49301234567',
     });
-    console.log('Created partner:', newPartner.id);
+    console.log('Created company:', newCompany.id);
 
-    // 2. List all active partners
-    console.log('\n2. Listing all active partners...');
-    const activePartners = await client.partner.listPartners({
-      status: 'active',
-      limit: 10,
-      sortBy: 'name',
-      sortOrder: 'asc',
-    });
-    console.log(`Found ${activePartners.total} active partners`);
-    activePartners.partners.forEach((p, index) => {
-      console.log(`  ${index + 1}. ${p.name} (${p.type})`);
-    });
-
-    // 3. Get partner details
-    console.log('\n3. Getting partner details...');
-    const partnerDetails = await client.partner.getPartner(newPartner.id);
-    console.log('Partner details:', {
-      id: partnerDetails.id,
-      name: partnerDetails.name,
-      email: partnerDetails.email,
-      commission: partnerDetails.commission,
-    });
-
-    // 4. Update partner information
-    console.log('\n4. Updating partner...');
-    const updatedPartner = await client.partner.updatePartner(newPartner.id, {
-      commission: 22.5,
-      phone: '+1-555-9999',
-    });
-    console.log('Partner updated, new commission:', updatedPartner.commission);
-
-    // 5. Activate partner
-    console.log('\n5. Activating partner...');
-    const activatedPartner = await client.partner.activatePartner(newPartner.id);
-    console.log('Partner status:', activatedPartner.status);
-
-    // 6. Create a transaction
-    console.log('\n6. Creating a transaction...');
-    const transaction = await client.partner.createPartnerTransaction(newPartner.id, {
-      type: 'commission',
-      amount: 500.00,
-      currency: 'EUR',
-      description: 'Q1 2024 commission payment',
-      referenceId: 'REF-2024-Q1-001',
-    });
-    console.log('Transaction created:', transaction.id);
-
-    // 7. List partner transactions
-    console.log('\n7. Listing partner transactions...');
-    const transactions = await client.partner.listPartnerTransactions(newPartner.id, {
+    // 2. List all companies
+    console.log('\n2. Listing all companies...');
+    const companies = await client.partner.listCompanies({
       limit: 10,
     });
-    console.log(`Found ${transactions.total} transactions`);
-    transactions.transactions.forEach((t, index) => {
-      console.log(`  ${index + 1}. ${t.type}: ${t.amount} ${t.currency || 'EUR'}`);
+    console.log(`Found ${companies.count} companies`);
+    companies.results.forEach((company, index) => {
+      console.log(`  ${index + 1}. ${company.name}`);
     });
 
-    // 8. Get partner analytics
-    console.log('\n8. Getting partner analytics...');
-    const analytics = await client.partner.getPartnerAnalytics(newPartner.id, {
-      startDate: '2024-01-01',
-      endDate: '2024-12-31',
-      groupBy: 'month',
-    });
-    console.log('Analytics:', {
-      totalRevenue: analytics.totalRevenue,
-      totalCommission: analytics.totalCommission,
-      totalTransactions: analytics.totalTransactions,
+    // 3. Get company details
+    console.log('\n3. Getting company details...');
+    const companyDetails = await client.partner.getCompany(newCompany.id);
+    console.log('Company details:', {
+      id: companyDetails.id,
+      name: companyDetails.name,
+      taxId: companyDetails.taxId,
     });
 
-    // 9. Create an API key for the partner
-    console.log('\n9. Creating API key...');
-    const apiKey = await client.partner.createPartnerApiKey(newPartner.id, {
-      name: 'Production Key',
-      scope: ['read', 'write'],
-      expiresAt: '2025-12-31T23:59:59Z',
+    // 4. Update company information
+    console.log('\n4. Updating company...');
+    const updatedCompany = await client.partner.updateCompany(newCompany.id, {
+      contactEmail: 'info@techsolutions.com',
     });
-    console.log('API key created:', apiKey.id);
+    console.log('Company updated, new email:', updatedCompany.contactEmail);
 
-    // 10. List partner API keys
-    console.log('\n10. Listing partner API keys...');
-    const apiKeys = await client.partner.listPartnerApiKeys(newPartner.id);
-    console.log(`Found ${apiKeys.total} API keys`);
-    apiKeys.apiKeys.forEach((key, index) => {
-      console.log(`  ${index + 1}. ${key.name || 'Unnamed'} (${key.scope?.join(', ')})`);
+    // 5. Create a user
+    console.log('\n5. Creating a new user...');
+    const newUser = await client.partner.createUser({
+      email: 'jane.smith@techsolutions.com',
+      firstName: 'Jane',
+      lastName: 'Smith',
+      companyId: newCompany.id,
+      roles: ['admin', 'user'],
+    });
+    console.log('Created user:', newUser.id);
+
+    // 6. List users
+    console.log('\n6. Listing users...');
+    const users = await client.partner.listUsers({
+      companyId: newCompany.id,
+      limit: 10,
+    });
+    console.log(`Found ${users.count} users`);
+    users.results.forEach((user, index) => {
+      console.log(`  ${index + 1}. ${user.email} (${user.roles?.join(', ')})`);
     });
 
-    // 11. Search partners by type
-    console.log('\n11. Searching reseller partners...');
-    const resellers = await client.partner.listPartners({
-      type: 'reseller',
-      status: 'active',
+    // 7. Get user details
+    console.log('\n7. Getting user details...');
+    const userDetails = await client.partner.getUser(newUser.id);
+    console.log('User details:', {
+      id: userDetails.id,
+      email: userDetails.email,
+      companyId: userDetails.companyId,
     });
-    console.log(`Found ${resellers.total} active resellers`);
+
+    // 8. Create a user invite
+    console.log('\n8. Creating user invite...');
+    const invite = await client.partner.createUserInvite({
+      email: 'newuser@techsolutions.com',
+      companyId: newCompany.id,
+      roles: ['user'],
+    });
+    console.log('User invite created:', invite.id);
+    console.log('Invite URL:', invite.inviteUrl);
+
+    // 9. Get invite details
+    console.log('\n9. Getting invite details...');
+    const inviteDetails = await client.partner.getUserInvite(invite.id);
+    console.log('Invite details:', {
+      id: inviteDetails.id,
+      email: inviteDetails.email,
+      status: inviteDetails.status,
+    });
+
+    // 10. Get token info
+    console.log('\n10. Getting token info...');
+    const tokenInfo = await client.partner.getTokenInfo();
+    console.log('Token info:', {
+      userId: tokenInfo.userId,
+      companyId: tokenInfo.companyId,
+      scopes: tokenInfo.scopes,
+    });
 
     console.log('\n✅ All examples completed successfully!');
   } catch (error) {

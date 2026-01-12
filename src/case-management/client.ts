@@ -1,16 +1,34 @@
 import { HttpClient } from '../http-client';
 import {
-  Case,
-  CaseListResponse,
-  CreateCaseParams,
-  UpdateCaseParams,
-  ListCasesParams,
-  CaseComment,
-  CaseCommentsListResponse,
-  CreateCaseCommentParams,
-  CaseActivity,
-  CaseActivitiesListResponse,
-  CaseAttachment,
+  Claim,
+  ClaimListResponse,
+  CreateClaimParams,
+  ListClaimsParams,
+  Debtor,
+  DebtorListResponse,
+  CreateDebtorParams,
+  ListDebtorsParams,
+  Address,
+  BankAccount,
+  CommunicationChannel,
+  Mandate,
+  MandateListResponse,
+  ListMandatesParams,
+  StatusUpdate,
+  StatusUpdateListResponse,
+  RequestToClient,
+  RequestToClientListResponse,
+  SubmitRequestAnswerParams,
+  Payment,
+  PaymentListResponse,
+  CreatePaymentParams,
+  ListPaymentsParams,
+  Statement,
+  StatementListResponse,
+  ListStatementsParams,
+  MandateDetail,
+  MandateDetailsListResponse,
+  UserInfo,
 } from './types';
 
 /**
@@ -25,170 +43,304 @@ export class CaseManagementClient {
     this.httpClient = httpClient;
   }
 
+  // ==================== Claims ====================
+
   /**
-   * List all cases
+   * List all claims
    * @param params - Filter and pagination parameters
    */
-  async listCases(params?: ListCasesParams): Promise<CaseListResponse> {
-    const response = await this.httpClient.get<CaseListResponse>('/cases', params);
+  async listClaims(params?: ListClaimsParams): Promise<ClaimListResponse> {
+    const response = await this.httpClient.get<ClaimListResponse>('/claims', params);
     return response.data;
   }
 
   /**
-   * Get a specific case by ID
-   * @param caseId - The case ID
+   * Create a new claim
+   * @param params - Claim creation parameters
    */
-  async getCase(caseId: string): Promise<Case> {
-    const response = await this.httpClient.get<Case>(`/cases/${caseId}`);
+  async createClaim(params: CreateClaimParams): Promise<Claim> {
+    const response = await this.httpClient.post<Claim>('/claims', params);
     return response.data;
   }
 
   /**
-   * Create a new case
-   * @param params - Case creation parameters
+   * Retrieve a specific claim by ID
+   * @param claimId - The claim ID
    */
-  async createCase(params: CreateCaseParams): Promise<Case> {
-    const response = await this.httpClient.post<Case>('/cases', params);
+  async getClaim(claimId: string): Promise<Claim> {
+    const response = await this.httpClient.get<Claim>(`/claims/${claimId}`);
     return response.data;
   }
 
   /**
-   * Update an existing case
-   * @param caseId - The case ID
-   * @param params - Case update parameters
+   * Delete an unreleased claim
+   * @param claimId - The claim ID
    */
-  async updateCase(caseId: string, params: UpdateCaseParams): Promise<Case> {
-    const response = await this.httpClient.patch<Case>(`/cases/${caseId}`, params);
+  async deleteClaim(claimId: string): Promise<void> {
+    await this.httpClient.delete(`/claims/${claimId}`);
+  }
+
+  /**
+   * Release a claim for processing
+   * @param claimId - The claim ID
+   */
+  async releaseClaim(claimId: string): Promise<Claim> {
+    const response = await this.httpClient.post<Claim>(`/claims/${claimId}/release`);
     return response.data;
   }
 
   /**
-   * Delete a case
-   * @param caseId - The case ID
-   */
-  async deleteCase(caseId: string): Promise<void> {
-    await this.httpClient.delete(`/cases/${caseId}`);
-  }
-
-  /**
-   * Close a case
-   * @param caseId - The case ID
-   */
-  async closeCase(caseId: string): Promise<Case> {
-    const response = await this.httpClient.post<Case>(`/cases/${caseId}/close`);
-    return response.data;
-  }
-
-  /**
-   * Reopen a case
-   * @param caseId - The case ID
-   */
-  async reopenCase(caseId: string): Promise<Case> {
-    const response = await this.httpClient.post<Case>(`/cases/${caseId}/reopen`);
-    return response.data;
-  }
-
-  /**
-   * List comments for a case
-   * @param caseId - The case ID
-   * @param params - Pagination parameters
-   */
-  async listCaseComments(caseId: string, params?: { page?: number; limit?: number }): Promise<CaseCommentsListResponse> {
-    const response = await this.httpClient.get<CaseCommentsListResponse>(`/cases/${caseId}/comments`, params);
-    return response.data;
-  }
-
-  /**
-   * Add a comment to a case
-   * @param caseId - The case ID
-   * @param params - Comment parameters
-   */
-  async addCaseComment(caseId: string, params: CreateCaseCommentParams): Promise<CaseComment> {
-    const response = await this.httpClient.post<CaseComment>(`/cases/${caseId}/comments`, params);
-    return response.data;
-  }
-
-  /**
-   * Update a case comment
-   * @param caseId - The case ID
-   * @param commentId - The comment ID
-   * @param content - Updated comment content
-   */
-  async updateCaseComment(caseId: string, commentId: string, content: string): Promise<CaseComment> {
-    const response = await this.httpClient.patch<CaseComment>(
-      `/cases/${caseId}/comments/${commentId}`,
-      { content }
-    );
-    return response.data;
-  }
-
-  /**
-   * Delete a case comment
-   * @param caseId - The case ID
-   * @param commentId - The comment ID
-   */
-  async deleteCaseComment(caseId: string, commentId: string): Promise<void> {
-    await this.httpClient.delete(`/cases/${caseId}/comments/${commentId}`);
-  }
-
-  /**
-   * List activities/history for a case
-   * @param caseId - The case ID
-   * @param params - Pagination parameters
-   */
-  async listCaseActivities(caseId: string, params?: { page?: number; limit?: number }): Promise<CaseActivitiesListResponse> {
-    const response = await this.httpClient.get<CaseActivitiesListResponse>(`/cases/${caseId}/activities`, params);
-    return response.data;
-  }
-
-  /**
-   * List attachments for a case
-   * @param caseId - The case ID
-   */
-  async listCaseAttachments(caseId: string): Promise<CaseAttachment[]> {
-    const response = await this.httpClient.get<CaseAttachment[]>(`/cases/${caseId}/attachments`);
-    return response.data;
-  }
-
-  /**
-   * Upload an attachment to a case
-   * @param caseId - The case ID
+   * Upload a document to a claim
+   * @param claimId - The claim ID
    * @param file - File data (File, Blob, or FormData)
    */
-  async uploadCaseAttachment(caseId: string, file: File | Blob | FormData): Promise<CaseAttachment> {
-    const response = await this.httpClient.post<CaseAttachment>(
-      `/cases/${caseId}/attachments`,
+  async uploadClaimDocument(claimId: string, file: File | Blob | FormData): Promise<any> {
+    const response = await this.httpClient.post<any>(
+      `/claims/${claimId}/documents`,
       file,
       { 'Content-Type': 'multipart/form-data' }
     );
     return response.data;
   }
 
-  /**
-   * Delete a case attachment
-   * @param caseId - The case ID
-   * @param attachmentId - The attachment ID
-   */
-  async deleteCaseAttachment(caseId: string, attachmentId: string): Promise<void> {
-    await this.httpClient.delete(`/cases/${caseId}/attachments/${attachmentId}`);
-  }
+  // ==================== Debtors ====================
 
   /**
-   * Assign a case to a user
-   * @param caseId - The case ID
-   * @param userId - The user ID to assign to
+   * List all debtors
+   * @param params - Filter and pagination parameters
    */
-  async assignCase(caseId: string, userId: string): Promise<Case> {
-    const response = await this.httpClient.post<Case>(`/cases/${caseId}/assign`, { assignedTo: userId });
+  async listDebtors(params?: ListDebtorsParams): Promise<DebtorListResponse> {
+    const response = await this.httpClient.get<DebtorListResponse>('/debtors', params);
     return response.data;
   }
 
   /**
-   * Unassign a case
-   * @param caseId - The case ID
+   * Create a new debtor
+   * @param params - Debtor creation parameters
    */
-  async unassignCase(caseId: string): Promise<Case> {
-    const response = await this.httpClient.post<Case>(`/cases/${caseId}/unassign`);
+  async createDebtor(params: CreateDebtorParams): Promise<Debtor> {
+    const response = await this.httpClient.post<Debtor>('/debtors', params);
+    return response.data;
+  }
+
+  /**
+   * Retrieve a specific debtor by ID
+   * @param debtorId - The debtor ID
+   */
+  async getDebtor(debtorId: string): Promise<Debtor> {
+    const response = await this.httpClient.get<Debtor>(`/debtors/${debtorId}`);
+    return response.data;
+  }
+
+  /**
+   * Add an address to a debtor
+   * @param debtorId - The debtor ID
+   * @param address - Address data
+   */
+  async addDebtorAddress(debtorId: string, address: Address): Promise<Address> {
+    const response = await this.httpClient.post<Address>(`/debtors/${debtorId}/addresses`, address);
+    return response.data;
+  }
+
+  /**
+   * Add a bank account to a debtor
+   * @param debtorId - The debtor ID
+   * @param bankAccount - Bank account data
+   */
+  async addDebtorBankAccount(debtorId: string, bankAccount: BankAccount): Promise<BankAccount> {
+    const response = await this.httpClient.post<BankAccount>(`/debtors/${debtorId}/bank-accounts`, bankAccount);
+    return response.data;
+  }
+
+  /**
+   * Add a communication channel to a debtor
+   * @param debtorId - The debtor ID
+   * @param channel - Communication channel data
+   */
+  async addDebtorCommunicationChannel(debtorId: string, channel: CommunicationChannel): Promise<CommunicationChannel> {
+    const response = await this.httpClient.post<CommunicationChannel>(
+      `/debtors/${debtorId}/communication-channels`,
+      channel
+    );
+    return response.data;
+  }
+
+  // ==================== Mandates ====================
+
+  /**
+   * List all mandates
+   * @param params - Filter and pagination parameters
+   */
+  async listMandates(params?: ListMandatesParams): Promise<MandateListResponse> {
+    const response = await this.httpClient.get<MandateListResponse>('/mandates', params);
+    return response.data;
+  }
+
+  /**
+   * Retrieve a specific mandate by ID
+   * @param mandateId - The mandate ID
+   */
+  async getMandate(mandateId: string): Promise<Mandate> {
+    const response = await this.httpClient.get<Mandate>(`/mandates/${mandateId}`);
+    return response.data;
+  }
+
+  /**
+   * Archive a mandate
+   * @param mandateId - The mandate ID
+   */
+  async archiveMandate(mandateId: string): Promise<Mandate> {
+    const response = await this.httpClient.post<Mandate>(`/mandates/${mandateId}/archive`);
+    return response.data;
+  }
+
+  /**
+   * List status updates for a mandate
+   * @param mandateId - The mandate ID
+   * @param params - Pagination parameters
+   */
+  async listMandateStatusUpdates(mandateId: string, params?: { limit?: number; offset?: number }): Promise<StatusUpdateListResponse> {
+    const response = await this.httpClient.get<StatusUpdateListResponse>(
+      `/mandates/${mandateId}/status-updates`,
+      params
+    );
+    return response.data;
+  }
+
+  /**
+   * List requests to client for a mandate
+   * @param mandateId - The mandate ID
+   * @param params - Pagination parameters
+   */
+  async listMandateRequests(mandateId: string, params?: { limit?: number; offset?: number }): Promise<RequestToClientListResponse> {
+    const response = await this.httpClient.get<RequestToClientListResponse>(
+      `/mandates/${mandateId}/requests`,
+      params
+    );
+    return response.data;
+  }
+
+  /**
+   * Get request to client details
+   * @param mandateId - The mandate ID
+   * @param requestId - The request ID
+   */
+  async getMandateRequest(mandateId: string, requestId: string): Promise<RequestToClient> {
+    const response = await this.httpClient.get<RequestToClient>(
+      `/mandates/${mandateId}/requests/${requestId}`
+    );
+    return response.data;
+  }
+
+  /**
+   * Submit an answer to a request to client
+   * @param mandateId - The mandate ID
+   * @param requestId - The request ID
+   * @param params - Answer parameters
+   */
+  async submitMandateRequestAnswer(
+    mandateId: string,
+    requestId: string,
+    params: SubmitRequestAnswerParams
+  ): Promise<RequestToClient> {
+    const response = await this.httpClient.post<RequestToClient>(
+      `/mandates/${mandateId}/requests/${requestId}/answer`,
+      params
+    );
+    return response.data;
+  }
+
+  /**
+   * Upload a document to a request to client answer
+   * @param mandateId - The mandate ID
+   * @param requestId - The request ID
+   * @param file - File data (File, Blob, or FormData)
+   */
+  async uploadMandateRequestDocument(
+    mandateId: string,
+    requestId: string,
+    file: File | Blob | FormData
+  ): Promise<any> {
+    const response = await this.httpClient.post<any>(
+      `/mandates/${mandateId}/requests/${requestId}/documents`,
+      file,
+      { 'Content-Type': 'multipart/form-data' }
+    );
+    return response.data;
+  }
+
+  // ==================== Payments ====================
+
+  /**
+   * List all payments
+   * @param params - Filter and pagination parameters
+   */
+  async listPayments(params?: ListPaymentsParams): Promise<PaymentListResponse> {
+    const response = await this.httpClient.get<PaymentListResponse>('/payments', params);
+    return response.data;
+  }
+
+  /**
+   * Create a new payment
+   * @param params - Payment creation parameters
+   */
+  async createPayment(params: CreatePaymentParams): Promise<Payment> {
+    const response = await this.httpClient.post<Payment>('/payments', params);
+    return response.data;
+  }
+
+  /**
+   * Retrieve a specific payment by ID
+   * @param paymentId - The payment ID
+   */
+  async getPayment(paymentId: string): Promise<Payment> {
+    const response = await this.httpClient.get<Payment>(`/payments/${paymentId}`);
+    return response.data;
+  }
+
+  // ==================== Statements ====================
+
+  /**
+   * List all statements
+   * @param params - Filter and pagination parameters
+   */
+  async listStatements(params?: ListStatementsParams): Promise<StatementListResponse> {
+    const response = await this.httpClient.get<StatementListResponse>('/statements', params);
+    return response.data;
+  }
+
+  /**
+   * Retrieve a specific statement by ID
+   * @param statementId - The statement ID
+   */
+  async getStatement(statementId: string): Promise<Statement> {
+    const response = await this.httpClient.get<Statement>(`/statements/${statementId}`);
+    return response.data;
+  }
+
+  /**
+   * List mandate details for a statement
+   * @param statementId - The statement ID
+   * @param params - Pagination parameters
+   */
+  async listStatementMandateDetails(
+    statementId: string,
+    params?: { limit?: number; offset?: number }
+  ): Promise<MandateDetailsListResponse> {
+    const response = await this.httpClient.get<MandateDetailsListResponse>(
+      `/statements/${statementId}/mandate-details`,
+      params
+    );
+    return response.data;
+  }
+
+  // ==================== Info ====================
+
+  /**
+   * Get current user information
+   */
+  async getUserInfo(): Promise<UserInfo> {
+    const response = await this.httpClient.get<UserInfo>('/info/user');
     return response.data;
   }
 }

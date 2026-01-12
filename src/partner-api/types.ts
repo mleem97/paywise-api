@@ -3,194 +3,181 @@
  */
 
 /**
- * Partner status
+ * Company object
  */
-export type PartnerStatus = 'active' | 'inactive' | 'pending' | 'suspended';
-
-/**
- * Partner type
- */
-export type PartnerType = 'reseller' | 'affiliate' | 'integration' | 'technology';
-
-/**
- * Partner object
- */
-export interface Partner {
+export interface Company {
   id: string;
   name: string;
-  email?: string;
-  type?: PartnerType;
-  status: PartnerStatus;
-  companyName?: string;
-  contactPerson?: string;
-  phone?: string;
-  address?: Address;
-  website?: string;
-  apiKey?: string;
-  commission?: number;
-  metadata?: Record<string, any>;
+  legalForm?: string;
+  taxId?: string;
+  registrationNumber?: string;
+  address?: CompanyAddress;
+  contactEmail?: string;
+  contactPhone?: string;
+  status?: string;
   createdAt?: string;
   updatedAt?: string;
-  activatedAt?: string;
+  [key: string]: any;
 }
 
 /**
- * Address information
+ * Company address
  */
-export interface Address {
+export interface CompanyAddress {
   street?: string;
-  city?: string;
-  state?: string;
+  houseNumber?: string;
   postalCode?: string;
+  city?: string;
   country?: string;
+  [key: string]: any;
 }
 
 /**
- * Parameters for creating a partner
+ * Parameters for creating a company
  */
-export interface CreatePartnerParams {
+export interface CreateCompanyParams {
   name: string;
-  email?: string;
-  type?: PartnerType;
-  companyName?: string;
-  contactPerson?: string;
-  phone?: string;
-  address?: Address;
-  website?: string;
-  commission?: number;
-  metadata?: Record<string, any>;
+  legalForm?: string;
+  taxId?: string;
+  registrationNumber?: string;
+  address?: CompanyAddress;
+  contactEmail?: string;
+  contactPhone?: string;
+  [key: string]: any;
 }
 
 /**
- * Parameters for updating a partner
+ * Parameters for updating a company
  */
-export interface UpdatePartnerParams {
+export interface UpdateCompanyParams {
   name?: string;
-  email?: string;
-  type?: PartnerType;
-  status?: PartnerStatus;
-  companyName?: string;
-  contactPerson?: string;
-  phone?: string;
-  address?: Address;
-  website?: string;
-  commission?: number;
-  metadata?: Record<string, any>;
+  legalForm?: string;
+  taxId?: string;
+  registrationNumber?: string;
+  address?: CompanyAddress;
+  contactEmail?: string;
+  contactPhone?: string;
+  [key: string]: any;
 }
 
 /**
- * Parameters for listing partners
+ * Parameters for listing companies
  */
-export interface ListPartnersParams {
-  status?: PartnerStatus | PartnerStatus[];
-  type?: PartnerType | PartnerType[];
-  page?: number;
+export interface ListCompaniesParams {
+  id?: string;
   limit?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
-  search?: string;
-}
-
-/**
- * Partner transaction
- */
-export interface PartnerTransaction {
-  id: string;
-  partnerId: string;
-  type: 'commission' | 'payment' | 'refund' | 'adjustment';
-  amount: number;
-  currency?: string;
-  description?: string;
-  referenceId?: string;
-  status?: 'pending' | 'completed' | 'failed' | 'cancelled';
-  createdAt?: string;
-  processedAt?: string;
-}
-
-/**
- * Parameters for creating a transaction
- */
-export interface CreatePartnerTransactionParams {
-  type: 'commission' | 'payment' | 'refund' | 'adjustment';
-  amount: number;
-  currency?: string;
-  description?: string;
-  referenceId?: string;
-}
-
-/**
- * Partner analytics/statistics
- */
-export interface PartnerAnalytics {
-  partnerId: string;
-  totalRevenue?: number;
-  totalCommission?: number;
-  totalTransactions?: number;
-  activeCustomers?: number;
-  conversionRate?: number;
-  periodStart?: string;
-  periodEnd?: string;
-  currency?: string;
-}
-
-/**
- * Parameters for analytics query
- */
-export interface PartnerAnalyticsParams {
-  partnerId?: string;
-  startDate?: string;
-  endDate?: string;
-  groupBy?: 'day' | 'week' | 'month' | 'year';
-}
-
-/**
- * Partner API key
- */
-export interface PartnerApiKey {
-  id: string;
-  partnerId: string;
+  offset?: number;
   name?: string;
-  key: string;
-  scope?: string[];
+  [key: string]: any;
+}
+
+/**
+ * Company list response
+ */
+export interface CompanyListResponse {
+  count: number;
+  next?: string | null;
+  previous?: string | null;
+  results: Company[];
+}
+
+/**
+ * User object
+ */
+export interface User {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  companyId?: string;
+  roles?: string[];
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
+}
+
+/**
+ * Parameters for creating a user
+ */
+export interface CreateUserParams {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  companyId?: string;
+  roles?: string[];
+  [key: string]: any;
+}
+
+/**
+ * Parameters for listing users
+ */
+export interface ListUsersParams {
+  limit?: number;
+  offset?: number;
+  companyId?: string;
+  email?: string;
+  [key: string]: any;
+}
+
+/**
+ * User list response
+ */
+export interface UserListResponse {
+  count: number;
+  next?: string | null;
+  previous?: string | null;
+  results: User[];
+}
+
+/**
+ * User invite object
+ */
+export interface UserInvite {
+  id: string;
+  email: string;
+  companyId?: string;
+  roles?: string[];
+  status?: string;
+  inviteUrl?: string;
   expiresAt?: string;
   createdAt?: string;
-  lastUsedAt?: string;
+  acceptedAt?: string;
+  [key: string]: any;
 }
 
 /**
- * Parameters for creating an API key
+ * Parameters for creating a user invite
  */
-export interface CreatePartnerApiKeyParams {
-  name?: string;
-  scope?: string[];
+export interface CreateUserInviteParams {
+  email: string;
+  companyId?: string;
+  roles?: string[];
+  [key: string]: any;
+}
+
+/**
+ * Onboarded user object
+ */
+export interface OnboardedUser {
+  id: string;
+  inviteId: string;
+  userId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  companyId?: string;
+  onboardedAt?: string;
+  [key: string]: any;
+}
+
+/**
+ * Token info object
+ */
+export interface TokenInfo {
+  userId?: string;
+  companyId?: string;
+  scopes?: string[];
   expiresAt?: string;
-}
-
-/**
- * Partner list response
- */
-export interface PartnerListResponse {
-  partners: Partner[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-/**
- * Transaction list response
- */
-export interface PartnerTransactionListResponse {
-  transactions: PartnerTransaction[];
-  total: number;
-  page?: number;
-  limit?: number;
-}
-
-/**
- * API keys list response
- */
-export interface PartnerApiKeyListResponse {
-  apiKeys: PartnerApiKey[];
-  total: number;
+  [key: string]: any;
 }

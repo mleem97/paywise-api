@@ -18,21 +18,22 @@ const client = new PaywiseClient({
 
 async function basicExample() {
   try {
-    // List cases
-    const cases = await client.caseManagement.listCases({ limit: 5 });
-    console.log(`Found ${cases.total} cases`);
+    // List claims
+    const claims = await client.caseManagement.listClaims({ limit: 5 });
+    console.log(`Found ${claims.count} claims`);
 
-    // List partners
-    const partners = await client.partner.listPartners({ limit: 5 });
-    console.log(`Found ${partners.total} partners`);
+    // List companies
+    const companies = await client.partner.listCompanies({ limit: 5 });
+    console.log(`Found ${companies.count} companies`);
 
-    // Create a case
-    const newCase = await client.caseManagement.createCase({
-      title: 'Test Case',
-      description: 'This is a test case created from JavaScript',
-      priority: 'medium',
+    // Create a debtor
+    const newDebtor = await client.caseManagement.createDebtor({
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      type: 'person',
     });
-    console.log('Created case with ID:', newCase.id);
+    console.log('Created debtor with ID:', newDebtor.id);
 
   } catch (error) {
     console.error('Error:', error.message);
@@ -44,13 +45,13 @@ async function basicExample() {
 
 // Using promises (without async/await)
 function promiseExample() {
-  client.caseManagement.listCases({ limit: 5 })
-    .then(cases => {
-      console.log(`Found ${cases.total} cases`);
-      return client.partner.listPartners({ limit: 5 });
+  client.caseManagement.listClaims({ limit: 5 })
+    .then(claims => {
+      console.log(`Found ${claims.count} claims`);
+      return client.partner.listCompanies({ limit: 5 });
     })
-    .then(partners => {
-      console.log(`Found ${partners.total} partners`);
+    .then(companies => {
+      console.log(`Found ${companies.count} companies`);
     })
     .catch(error => {
       console.error('Error:', error);

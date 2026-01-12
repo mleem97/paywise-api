@@ -2,7 +2,7 @@
  * Example: Case Management API usage
  * 
  * This example demonstrates how to use the Case Management API
- * to create, update, and manage cases.
+ * to manage claims, debtors, mandates, payments, and statements.
  */
 
 import { PaywiseClient } from '../src';
@@ -17,88 +17,93 @@ async function main() {
   try {
     console.log('=== Case Management API Examples ===\n');
 
-    // 1. Create a new case
-    console.log('1. Creating a new case...');
-    const newCase = await client.caseManagement.createCase({
-      title: 'Payment Processing Issue',
-      description: 'Customer reports payment not being processed correctly',
-      priority: 'high',
-      type: 'billing',
-      customerId: 'customer-12345',
-      tags: ['payment', 'urgent'],
+    // 1. Create a debtor
+    console.log('1. Creating a new debtor...');
+    const newDebtor = await client.caseManagement.createDebtor({
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      type: 'person',
     });
-    console.log('Created case:', newCase.id);
+    console.log('Created debtor:', newDebtor.id);
 
-    // 2. List all open cases
-    console.log('\n2. Listing all open cases...');
-    const openCases = await client.caseManagement.listCases({
-      status: 'open',
+    // 2. Add address to debtor
+    console.log('\n2. Adding address to debtor...');
+    await client.caseManagement.addDebtorAddress(newDebtor.id, {
+      street: 'Main Street',
+      houseNumber: '123',
+      postalCode: '12345',
+      city: 'Berlin',
+      country: 'Germany',
+    });
+    console.log('Address added successfully');
+
+    // 3. Create a claim
+    console.log('\n3. Creating a new claim...');
+    const newClaim = await client.caseManagement.createClaim({
+      debtorId: newDebtor.id,
+      amount: 1500.00,
+      currency: 'EUR',
+      description: 'Invoice payment for services',
+      invoiceNumber: 'INV-2024-001',
+      invoiceDate: '2024-01-15',
+      dueDate: '2024-02-15',
+    });
+    console.log('Created claim:', newClaim.id);
+
+    // 4. List all claims
+    console.log('\n4. Listing all claims...');
+    const claims = await client.caseManagement.listClaims({
       limit: 10,
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
     });
-    console.log(`Found ${openCases.total} open cases`);
-    openCases.cases.forEach((c, index) => {
-      console.log(`  ${index + 1}. ${c.title} (${c.priority})`);
+    console.log(`Found ${claims.count} claims`);
+    claims.results.forEach((claim, index) => {
+      console.log(`  ${index + 1}. ${claim.description} - ${claim.amount} ${claim.currency}`);
     });
 
-    // 3. Get case details
-    console.log('\n3. Getting case details...');
-    const caseDetails = await client.caseManagement.getCase(newCase.id);
-    console.log('Case details:', {
-      id: caseDetails.id,
-      title: caseDetails.title,
-      status: caseDetails.status,
-      priority: caseDetails.priority,
+    // 5. Get claim details
+    console.log('\n5. Getting claim details...');
+    const claimDetails = await client.caseManagement.getClaim(newClaim.id);
+    console.log('Claim details:', {
+      id: claimDetails.id,
+      amount: claimDetails.amount,
+      status: claimDetails.status,
     });
 
-    // 4. Add a comment to the case
-    console.log('\n4. Adding a comment...');
-    const comment = await client.caseManagement.addCaseComment(newCase.id, {
-      content: 'Investigating the payment processing logs',
-      isInternal: false,
-    });
-    console.log('Comment added:', comment.id);
+    // 6. Release claim for processing
+    console.log('\n6. Releasing claim for processing...');
+    const releasedClaim = await client.caseManagement.releaseClaim(newClaim.id);
+    console.log('Claim released:', releasedClaim.status);
 
-    // 5. Update case status
-    console.log('\n5. Updating case status...');
-    const updatedCase = await client.caseManagement.updateCase(newCase.id, {
-      status: 'in_progress',
-      assignedTo: 'agent-789',
+    // 7. List debtors
+    console.log('\n7. Listing debtors...');
+    const debtors = await client.caseManagement.listDebtors({
+      limit: 10,
     });
-    console.log('Case updated, new status:', updatedCase.status);
+    console.log(`Found ${debtors.count} debtors`);
 
-    // 6. List case comments
-    console.log('\n6. Listing case comments...');
-    const comments = await client.caseManagement.listCaseComments(newCase.id);
-    console.log(`Found ${comments.total} comments`);
-    comments.comments.forEach((comment, index) => {
-      console.log(`  ${index + 1}. ${comment.content.substring(0, 50)}...`);
+    // 8. List mandates
+    console.log('\n8. Listing mandates...');
+    const mandates = await client.caseManagement.listMandates({
+      claimId: newClaim.id,
+      limit: 10,
     });
+    console.log(`Found ${mandates.count} mandates`);
 
-    // 7. List case activities
-    console.log('\n7. Listing case activities...');
-    const activities = await client.caseManagement.listCaseActivities(newCase.id);
-    console.log(`Found ${activities.total} activities`);
-    activities.activities.forEach((activity, index) => {
-      console.log(`  ${index + 1}. ${activity.action}`);
+    // 9. List payments
+    console.log('\n9. Listing payments...');
+    const payments = await client.caseManagement.listPayments({
+      limit: 10,
     });
+    console.log(`Found ${payments.count} payments`);
 
-    // 8. Close the case
-    console.log('\n8. Closing the case...');
-    const closedCase = await client.caseManagement.closeCase(newCase.id);
-    console.log('Case closed:', closedCase.status);
-
-    // 9. Search cases with multiple filters
-    console.log('\n9. Searching cases with filters...');
-    const filteredCases = await client.caseManagement.listCases({
-      status: ['open', 'in_progress'],
-      priority: ['high', 'urgent'],
-      type: 'billing',
-      page: 1,
-      limit: 5,
+    // 10. Get user info
+    console.log('\n10. Getting user info...');
+    const userInfo = await client.caseManagement.getUserInfo();
+    console.log('User info:', {
+      email: userInfo.email,
+      companyId: userInfo.companyId,
     });
-    console.log(`Found ${filteredCases.total} filtered cases`);
 
     console.log('\n✅ All examples completed successfully!');
   } catch (error) {
